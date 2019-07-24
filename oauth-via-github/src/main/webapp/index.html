@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Auth2 SpringBoot Example</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width" />
+    <base href="/" />
+    <link rel="stylesheet" type="text/css"
+          href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <a href="/webjars/jquery/jquery.min.js">/webjars/jquery/jquery.min.js</a>
+    <a href="/webjars/bootstrap/js/bootstrap.min.js">/webjars/bootstrap/js/bootstrap.min.js</a>
+    <a href="/webjars/js-cookie/js.cookie.js">/webjars/js-cookie/js.cookie.js</a>
+</head>
+
+<body>
+<h1 style="padding-left: 10px;">OAuth2 SpringBoot Example</h1>
+<div class="container"></div>
+
+<div style="padding-left: 20px">
+    <h2>Social Login</h2>
+    <div class="container unauthenticated">
+        <div>
+            Mit Facebook: <a href="/login/facebook">Hier Klicken</a>
+        </div>
+
+        <div>
+            Mit GitHub: <a href="/login/github">Hier Klicken</a>
+        </div>
+    </div>
+    <div class="container authenticated">
+        <div class="container">
+            Eingeloggt als: <span id="user"></span>
+            <button class="btn btn-primary">Logout</button>
+        </div>
+        <br />
+        <div class="container">
+            <div>
+                <a href="/customers">Alle Kunden zeigen</a>
+            </div>
+            <div>
+                <a href="/customer?customerId=0">Kunde mit ID 0 zeigen</a>
+            </div>
+
+            <div>
+                <a id="createCustomer" href="void(0);">Facebook-Testkunde erstellen</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+$.ajaxSetup({
+beforeSend : function(xhr, settings) {
+if (settings.type == 'POST' || settings.type == 'PUT'
+|| settings.type == 'DELETE') {
+if (!(/^http:.*/.test(settings.url) || /^https:.*/
+.test(settings.url))) {
+// Only send the token to relative URLs i.e. locally.
+xhr.setRequestHeader("X-XSRF-TOKEN", Cookies
+.get('XSRF-TOKEN'));
+}
+}
+}
+});
+
+$.get("/user", function(data) {
+if (data.userAuthentication != null) {
+$("#user").html(data.userAuthentication.details.name);
+$(".unauthenticated").hide()
+$(".authenticated").show()
+}
+});
+
+var logout = function() {
+$.post("/logout", function() {
+$("#user").html('');
+$(".unauthenticated").show();
+$(".authenticated").hide();
+})
+return true;
+};
+
+var customer = function() {
+$.ajax({
+type : "POST",
+contentType : "application/x-www-form-urlencoded; charset=utf-8",
+url : "/customer?id=3&companyName=Facebook",
+data : "",
+dataType : "x-www-form-urlencoded"
+});
+$("#createCustomer").hide();
+};
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+facebook:
+  client:
+    clientId: client-id-of-your-oauth2-facebook-app
+    clientSecret: client-secret-of-your-oauth2-facebook-app
+    accessTokenUri: https://graph.facebook.com/oauth/access_token
+    userAuthorizationUri: https://www.facebook.com/dialog/oauth
+    tokenName: oauth_token
+    authenticationScheme: query
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://graph.facebook.com/me
+
+github:
+  client:
+    clientId: client-id-of-your-oauth2-github-app
+    clientSecret: client-secret-of-your-oauth2-github-app
+    accessTokenUri: https://github.com/login/oauth/access_token
+    userAuthorizationUri: https://github.com/login/oauth/authorize
+    clientAuthenticationScheme: form
+  resource:
+    userInfoUri: https://api.github.com/user
+
+security:
+  oauth2:
+    client:
+      client-id: oauth2-testapp
+      client-secret: oauth2-testsecret
+      scope: read,write
+      auto-approve-scopes: '.*'
